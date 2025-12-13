@@ -11,6 +11,7 @@ import {
   Ticket,
   TicketWithDetails,
 } from "./types";
+import { TicketStatus, TicketPriority } from "@/types/database";
 import * as queries from "./queries";
 import {
   validateStatusTransition,
@@ -102,8 +103,8 @@ export async function getTicket(
 }
 
 export async function getTickets(filters?: {
-  status?: string;
-  priority?: string;
+  status?: TicketStatus;
+  priority?: TicketPriority;
 }): Promise<Ticket[]> {
   const tenantId = await requireTenantContext();
   return queries.getTickets(tenantId, filters);

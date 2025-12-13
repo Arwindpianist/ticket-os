@@ -124,7 +124,7 @@ export async function middleware(request: NextRequest) {
     // Check if user must change password
     const { data: profile } = await supabase
       .from("profiles")
-      .select("must_change_password, role")
+      .select("must_change_password, role, tenant_id")
       .eq("id", user.id)
       .single();
 

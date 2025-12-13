@@ -1,5 +1,6 @@
 import { createClient, createServiceRoleClient } from "@/lib/supabase/server";
-import { Ticket, TicketWithDetails, TicketStatus, TicketPriority } from "./types";
+import { Ticket, TicketWithDetails } from "./types";
+import { TicketStatus, TicketPriority } from "@/types/database";
 
 export async function getTickets(
   tenantId: string,

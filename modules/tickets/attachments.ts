@@ -95,11 +95,11 @@ export async function deleteTicketAttachment(attachmentId: string): Promise<void
     throw new NotFoundError("Attachment not found");
   }
 
-  // Verify tenant access
-  const ticket = attachment.tickets as { tenant_id: string };
-  if (ticket.tenant_id !== tenantId) {
-    throw new Error("Access denied");
-  }
+      // Verify tenant access
+      const ticket = attachment.tickets as unknown as { tenant_id: string };
+      if (ticket.tenant_id !== tenantId) {
+        throw new Error("Access denied");
+      }
 
   // Delete attachment (Note: This doesn't delete from storage - consider adding cleanup)
   const { error: deleteError } = await supabase
