@@ -51,9 +51,9 @@ export default function NewContractPage() {
       }
 
       // Store contract items as structured JSON
-      // ContractItem is compatible with Json, but TypeScript needs explicit casting
+      // ContractItem is compatible with Json, but TypeScript needs explicit casting through unknown
       const summary: Json = {
-        items: contractItems as Json[],
+        items: contractItems as unknown as Json[],
         version: "1.0",
       };
 
