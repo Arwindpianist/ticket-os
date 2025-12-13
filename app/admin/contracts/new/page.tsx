@@ -18,6 +18,7 @@ import { AnimatedCard, AnimatedCardHeader, CardContent, CardDescription, CardTit
 import { AnimatedPage } from "@/components/animated-page";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ContractBuilder, ContractItem } from "@/components/contract-builder";
+import { Json } from "@/types/database";
 
 export default function NewContractPage() {
   const router = useRouter();
@@ -50,8 +51,9 @@ export default function NewContractPage() {
       }
 
       // Store contract items as structured JSON
-      const summary = {
-        items: contractItems,
+      // ContractItem is compatible with Json, but TypeScript needs explicit casting
+      const summary: Json = {
+        items: contractItems as Json[],
         version: "1.0",
       };
 
