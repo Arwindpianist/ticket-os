@@ -29,7 +29,7 @@ export default async function BrandingPage() {
           <h1 className="text-4xl font-serif font-bold mb-2 bg-gradient-to-r from-foreground via-primary/30 to-foreground/80 bg-clip-text text-transparent">
             Branding Configuration
           </h1>
-          <p className="text-muted-foreground text-lg">Customize your tenant's appearance and branding</p>
+          <p className="text-muted-foreground text-lg">Customize your tenant&apos;s appearance and branding</p>
         </div>
 
         <BrandingForm 

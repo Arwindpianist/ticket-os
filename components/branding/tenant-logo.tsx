@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 
 interface TenantLogoProps {
   logoUrl: string;
@@ -18,6 +17,7 @@ export function TenantLogo({ logoUrl, alt, className }: TenantLogoProps) {
 
   return (
     <div className={`flex-shrink-0 ${className || ""}`}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={logoUrl}
         alt={alt}

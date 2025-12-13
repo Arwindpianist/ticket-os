@@ -49,7 +49,7 @@ export function ImpersonateButton({ tenantId, tenantName }: ImpersonateButtonPro
         {loading ? "Starting..." : "View as Tenant"}
       </Button>
       <p className="text-xs text-muted-foreground text-center">
-        View this tenant's workspace in read-only mode
+        View this tenant&apos;s workspace in read-only mode
       </p>
     </div>
   );

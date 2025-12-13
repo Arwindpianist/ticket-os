@@ -93,7 +93,7 @@ export function BrandingForm({ initialData, tenantId }: BrandingFormProps) {
               placeholder="https://example.com/logo.png"
             />
             <p className="text-xs text-muted-foreground">
-              URL to your tenant's logo image. Should be publicly accessible.
+              URL to your tenant&apos;s logo image. Should be publicly accessible.
             </p>
           </div>
 

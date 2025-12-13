@@ -173,7 +173,7 @@ export default function NewTicketPage() {
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-muted-foreground">
-                  Select the contract item this ticket relates to, or "Others" if it doesn't match any item.
+                  Select the contract item this ticket relates to, or &quot;Others&quot; if it doesn&apos;t match any item.
                 </p>
               </div>
 

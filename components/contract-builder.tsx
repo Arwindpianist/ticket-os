@@ -344,7 +344,7 @@ export function ContractBuilder({ value, onChange }: ContractBuilderProps) {
 
         {value.length === 0 && (
           <div className="text-center py-8 text-muted-foreground">
-            <p>No items yet. Click "Paste Text" or "Add Item" to get started.</p>
+            <p>No items yet. Click &quot;Paste Text&quot; or &quot;Add Item&quot; to get started.</p>
           </div>
         )}
       </div>
