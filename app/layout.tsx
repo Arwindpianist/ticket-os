@@ -22,6 +22,10 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Ticket OS",
   description: "Multi-tenant ticket management platform",
+  icons: {
+    icon: "/portal.svg",
+    apple: "/portal.svg",
+  },
 };
 
 export default async function RootLayout({
