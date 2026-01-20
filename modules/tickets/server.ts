@@ -156,7 +156,7 @@ export async function updateTicket(
     validateTicketTitle(input.title);
   }
 
-  const supabase = createClient();
+  const supabase = await createClient();
   const updateData: any = {};
   if (input.title) updateData.title = input.title;
   if (input.status) updateData.status = input.status;
