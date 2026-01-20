@@ -40,15 +40,16 @@ export async function generateMetadata({
 export default async function AdminContractDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   await requireSuperAdmin();
+  const { id } = await params;
   
   const supabase = createServiceRoleClient();
   const { data: contract, error } = await supabase
     .from("contracts")
     .select("*")
-    .eq("id", params.id)
+    .eq("id", id)
     .single();
 
   if (error || !contract) {
@@ -81,7 +82,7 @@ export default async function AdminContractDetailPage({
             <p className="text-muted-foreground text-lg">Tenant: {tenantName}</p>
           </div>
           <div className="flex gap-2">
-            <Link href={`/admin/contracts/${params.id}/edit`}>
+            <Link href={`/admin/contracts/${id}/edit`}>
               <Button className="transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
                 Edit Contract
               </Button>

@@ -31,11 +31,12 @@ export async function generateMetadata({
 export default async function AdminTicketDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   await requireSuperAdmin();
+  const { id } = await params;
   
-  const ticket = await getTicketByIdAdmin(params.id);
+  const ticket = await getTicketByIdAdmin(id);
 
   if (!ticket) {
     throw new NotFoundError("Ticket not found");

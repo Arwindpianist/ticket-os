@@ -29,10 +29,11 @@ export async function generateMetadata({
 export default async function TicketDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   await requireAuth();
-  const ticket = await getTicket(params.id);
+  const { id } = await params;
+  const ticket = await getTicket(id);
   const activityFeedEnabled = await isFeatureEnabled("activity_feed_enabled");
 
   if (!ticket) {

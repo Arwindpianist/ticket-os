@@ -26,10 +26,11 @@ export async function generateMetadata({
 export default async function ContractDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   await requireAuth();
-  const contract = await getContract(params.id);
+  const { id } = await params;
+  const contract = await getContract(id);
 
   if (!contract) {
     throw new NotFoundError("Contract not found");

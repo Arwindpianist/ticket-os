@@ -13,10 +13,11 @@ import { formatDate } from "@/lib/utils";
 export default async function TenantDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   await requireSuperAdmin();
-  const tenant = await getTenantById(params.id);
+  const { id } = await params;
+  const tenant = await getTenantById(id);
 
   if (!tenant) {
     throw new NotFoundError("Tenant not found");
