@@ -162,6 +162,24 @@ export function Navigation() {
                 )}
               </Link>
               <Link
+                href="/admin/tickets"
+                className={cn(
+                  "text-sm font-medium transition-all duration-200 relative px-2 py-1 rounded-md",
+                  pathname?.startsWith("/admin/tickets")
+                    ? "text-foreground bg-accent"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                )}
+              >
+                Tickets
+                {pathname?.startsWith("/admin/tickets") && (
+                  <motion.div
+                    layoutId="admin-indicator"
+                    className="absolute inset-0 bg-accent rounded-md -z-10"
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
+              </Link>
+              <Link
                 href="/admin/contracts"
                 className={cn(
                   "text-sm font-medium transition-all duration-200 relative px-2 py-1 rounded-md",

@@ -22,8 +22,10 @@ import { logActivity } from "@/modules/activity/server";
 import {
   sendTicketNotification,
   sendCommentNotification,
+  sendAdminTicketNotification,
 } from "@/modules/notifications/server";
 import { getTenantUserEmails, getUserEmail } from "@/modules/notifications/helpers";
+import { getTenantById } from "@/modules/tenants/queries";
 
 export async function createTicket(
   input: CreateTicketInput
@@ -90,6 +92,27 @@ export async function createTicket(
   } catch (error) {
     // Don't fail ticket creation if notifications fail
     console.error("Failed to send ticket creation notifications:", error);
+  }
+
+  // Send admin notification to hello@arwindpianist.com with full ticket details
+  try {
+    const tenant = await getTenantById(tenantId);
+    const tenantName = tenant?.name || "Unknown Tenant";
+    const creatorEmail = await getUserEmail(session.user.id) || "Unknown";
+    
+    await sendAdminTicketNotification(
+      tenantId,
+      tenantName,
+      ticket.id,
+      ticket.title,
+      ticket.priority,
+      ticket.status,
+      creatorEmail,
+      input.initial_message
+    );
+  } catch (error) {
+    // Don't fail ticket creation if admin notification fails
+    console.error("Failed to send admin ticket notification:", error);
   }
 
   return ticket;

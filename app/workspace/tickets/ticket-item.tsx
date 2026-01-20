@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 
 interface TicketItemProps {
   ticket: {
@@ -53,7 +53,7 @@ export function TicketItem({ ticket, delay = 0 }: TicketItemProps) {
               </Badge>
             </div>
             <p className="text-sm text-muted-foreground mt-2">
-              Created {new Date(ticket.created_at).toLocaleDateString()}
+              Created {formatDate(ticket.created_at)}
             </p>
           </div>
         </div>

@@ -73,12 +73,7 @@ export async function createUser(input: CreateUserInput): Promise<CreateUserResu
     throw new ValidationError("Invalid role");
   }
 
-  // Super admin cannot have tenant_id
-  if (input.role === "super_admin" && input.tenantId) {
-    throw new ValidationError("Super admin cannot be assigned to a tenant");
-  }
-
-  // Tenant users must have tenant_id
+  // Tenant users must have tenant_id (super admins can optionally have tenant_id)
   if (input.role !== "super_admin" && !input.tenantId) {
     throw new ValidationError("Tenant admin and tenant user must be assigned to a tenant");
   }
@@ -170,12 +165,7 @@ export async function updateUserTenant(userId: string, tenantId: string | null):
     throw new ValidationError("User not found");
   }
 
-  // Super admin cannot have tenant_id
-  if (user.role === "super_admin" && tenantId) {
-    throw new ValidationError("Super admin cannot be assigned to a tenant");
-  }
-
-  // Tenant users must have tenant_id
+  // Tenant users must have tenant_id (super admins can optionally have tenant_id)
   if (user.role !== "super_admin" && !tenantId) {
     throw new ValidationError("Tenant admin and tenant user must be assigned to a tenant");
   }

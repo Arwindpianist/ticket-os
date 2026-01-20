@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { formatDate } from "@/lib/utils";
 
 interface UserListItemProps {
   user: {
@@ -38,7 +39,7 @@ export function UserListItem({ user, index }: UserListItemProps) {
             </Badge>
           </div>
           <p className="text-sm text-muted-foreground mt-2">
-            Joined {new Date(user.created_at).toLocaleDateString()}
+            Joined {formatDate(user.created_at)}
           </p>
         </div>
       </div>

@@ -3,6 +3,12 @@
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { TicketStats, TicketTrend } from "@/modules/analytics/queries";
 
+// Format date for chart display (consistent format)
+function formatChartDate(date: string | Date): string {
+  const d = typeof date === "string" ? new Date(date) : date;
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
 const COLORS = {
   open: "hsl(150, 25%, 45%)",
   in_progress: "hsl(150, 30%, 50%)",
@@ -63,7 +69,7 @@ export function TicketTrendsChart({ trends }: TicketTrendsChartProps) {
   // Format dates for display (show last 14 days or all if less)
   const displayTrends = trends.slice(-14).map((trend) => ({
     ...trend,
-    date: new Date(trend.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+    date: formatChartDate(trend.date),
   }));
 
   if (displayTrends.length === 0) {

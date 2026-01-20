@@ -160,3 +160,47 @@ export async function getMessageAddedTemplate(
   };
 }
 
+export async function getAdminTicketCreatedTemplate(
+  tenantId: string,
+  tenantName: string,
+  ticketTitle: string,
+  ticketId: string,
+  priority: string,
+  status: string,
+  creatorEmail: string,
+  initialMessage?: string
+): Promise<NotificationTemplate> {
+  const portalUrl = getPortalUrl();
+  const adminTicketUrl = `${portalUrl}/admin/tickets/${ticketId}`;
+
+  const priorityDisplay = priority.charAt(0).toUpperCase() + priority.slice(1);
+  const statusDisplay = status.replace("_", " ").replace(/\b\w/g, l => l.toUpperCase());
+
+  return {
+    subject: `[Ticket OS] New Ticket Created: ${ticketTitle}`,
+    body: getEmailTemplate(
+      "New Ticket Created",
+      `
+        <p>A new ticket has been created in Ticket OS.</p>
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 6px; margin: 20px 0;">
+          <p style="margin: 5px 0;"><strong>Tenant:</strong> ${tenantName}</p>
+          <p style="margin: 5px 0;"><strong>Ticket Title:</strong> ${ticketTitle}</p>
+          <p style="margin: 5px 0;"><strong>Ticket ID:</strong> ${ticketId}</p>
+          <p style="margin: 5px 0;"><strong>Priority:</strong> ${priorityDisplay}</p>
+          <p style="margin: 5px 0;"><strong>Status:</strong> ${statusDisplay}</p>
+          <p style="margin: 5px 0;"><strong>Created By:</strong> ${creatorEmail}</p>
+          ${initialMessage ? `
+            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e2e8f0;">
+              <p style="margin: 5px 0;"><strong>Initial Message:</strong></p>
+              <p style="margin: 5px 0; white-space: pre-wrap; color: #475569;">${initialMessage}</p>
+            </div>
+          ` : ''}
+        </div>
+        <p>You can view and respond to this ticket in the admin dashboard.</p>
+      `,
+      adminTicketUrl,
+      "View Ticket in Admin Dashboard"
+    ),
+  };
+}
+

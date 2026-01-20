@@ -26,6 +26,7 @@ import { User } from "@/modules/users/server";
 import { Tenant } from "@/modules/tenants/types";
 import { motion } from "framer-motion";
 import { Trash2 } from "lucide-react";
+import { formatDate } from "@/lib/utils";
 
 interface UserListProps {
   users: User[];
@@ -95,34 +96,29 @@ export function UserList({ users, tenants, currentUserId }: UserListProps) {
               )}
             </div>
             <div className="text-sm text-muted-foreground">
-              Created: {new Date(user.created_at).toLocaleDateString()}
+              Created: {formatDate(user.created_at)}
             </div>
           </div>
           <div className="flex items-center gap-4">
-            {user.role !== "super_admin" && (
-              <Select
-                value={user.tenant_id || ""}
-                onValueChange={(value) => 
-                  handleTenantChange(user.id, value === "none" ? null : value)
-                }
-                disabled={updating[user.id]}
-              >
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder="Select tenant" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">No Tenant</SelectItem>
-                  {tenants.map((tenant) => (
-                    <SelectItem key={tenant.id} value={tenant.id}>
-                      {tenant.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-            {user.role === "super_admin" && (
-              <span className="text-sm text-muted-foreground">No tenant assignment</span>
-            )}
+            <Select
+              value={user.tenant_id || "none"}
+              onValueChange={(value) => 
+                handleTenantChange(user.id, value === "none" ? null : value)
+              }
+              disabled={updating[user.id]}
+            >
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Select tenant" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">No Tenant</SelectItem>
+                {tenants.map((tenant) => (
+                  <SelectItem key={tenant.id} value={tenant.id}>
+                    {tenant.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             {user.id !== currentUserId && (
               <AlertDialog>
                 <AlertDialogTrigger asChild>

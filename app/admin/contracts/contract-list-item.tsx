@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { formatDate } from "@/lib/utils";
 
 interface ContractListItemProps {
   contract: {
@@ -43,7 +44,7 @@ export function ContractListItem({ contract, tenantName, index }: ContractListIt
               {today < startDate && <Badge variant="outline">Upcoming</Badge>}
             </div>
             <p className="text-sm text-muted-foreground mt-2">
-              Tenant: {tenantName} • {startDate.toLocaleDateString()} - {endDate.toLocaleDateString()}
+              Tenant: {tenantName} • {formatDate(startDate)} - {formatDate(endDate)}
             </p>
           </div>
         </div>

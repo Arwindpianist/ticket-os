@@ -56,7 +56,7 @@ export default function NewUserPage() {
       const result = await createUser({
         email: formData.email,
         role: formData.role,
-        tenantId: formData.role === "super_admin" ? undefined : formData.tenantId || undefined,
+        tenantId: formData.tenantId || undefined,
       });
       
       setCreatedUser({
@@ -131,28 +131,32 @@ export default function NewUserPage() {
                 </p>
               </div>
 
-              {formData.role !== "super_admin" && (
-                <div className="space-y-2">
-                  <Label htmlFor="tenantId">Tenant</Label>
-                  <Select
-                    value={formData.tenantId}
-                    onValueChange={(value) => setFormData({ ...formData, tenantId: value })}
-                    disabled={loading}
-                    required
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a tenant" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {tenants.map((tenant) => (
-                        <SelectItem key={tenant.id} value={tenant.id}>
-                          {tenant.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
+              <div className="space-y-2">
+                <Label htmlFor="tenantId">Tenant {formData.role !== "super_admin" && "(Required)"}</Label>
+                <Select
+                  value={formData.tenantId}
+                  onValueChange={(value) => setFormData({ ...formData, tenantId: value })}
+                  disabled={loading}
+                  required={formData.role !== "super_admin"}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a tenant (optional for super admin)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">No Tenant</SelectItem>
+                    {tenants.map((tenant) => (
+                      <SelectItem key={tenant.id} value={tenant.id}>
+                        {tenant.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  {formData.role === "super_admin" 
+                    ? "Super admins can optionally be assigned to a tenant for easier access."
+                    : "Tenant admin and tenant user must be assigned to a tenant."}
+                </p>
+              </div>
 
               <div className="flex gap-2 pt-4">
                 <Button type="submit" disabled={loading || !formData.email}>

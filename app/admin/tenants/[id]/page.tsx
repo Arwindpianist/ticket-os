@@ -8,6 +8,7 @@ import Link from "next/link";
 import { AnimatedPage } from "@/components/animated-page";
 import { TenantActions } from "./tenant-actions";
 import { ImpersonateButton } from "./impersonate-button";
+import { formatDate } from "@/lib/utils";
 
 export default async function TenantDetailPage({
   params,
@@ -74,7 +75,7 @@ export default async function TenantDetailPage({
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Created</p>
                   <p className="text-lg">
-                    {new Date(tenant.created_at).toLocaleDateString()}
+                    {formatDate(tenant.created_at)}
                   </p>
                 </div>
               </CardContent>

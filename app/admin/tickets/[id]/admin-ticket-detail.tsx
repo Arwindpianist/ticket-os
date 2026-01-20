@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { addTicketMessage, updateTicket } from "@/modules/tickets/server";
-import { uploadTicketFile } from "@/modules/tickets/attachments";
+import { addTicketMessageAdmin, updateTicketAdmin, uploadTicketFileAdmin } from "@/modules/tickets/server-admin";
 import { TicketWithDetails } from "@/types/ticket";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -16,18 +16,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Upload, X, File, Download } from "lucide-react";
+import { Upload, File, Download } from "lucide-react";
 import { motion } from "framer-motion";
-import { cn, formatDate, formatDateTime } from "@/lib/utils";
+import { getAllTenants } from "@/modules/tenants/server";
+import { formatDate, formatDateTime } from "@/lib/utils";
 
-export function TicketDetail({ ticket: initialTicket }: { ticket: TicketWithDetails }) {
+export function AdminTicketDetail({ ticket: initialTicket }: { ticket: TicketWithDetails }) {
   const router = useRouter();
   const [ticket, setTicket] = useState(initialTicket);
   const [message, setMessage] = useState("");
+  const [isInternalNote, setIsInternalNote] = useState(false);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [tenants, setTenants] = useState<any[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    getAllTenants().then(setTenants).catch(console.error);
+  }, []);
+
+  const tenantName = tenants.find(t => t.id === ticket.tenant_id)?.name || "Unknown Tenant";
 
   const handleAddMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,8 +46,12 @@ export function TicketDetail({ ticket: initialTicket }: { ticket: TicketWithDeta
     setError(null);
 
     try {
-      await addTicketMessage(ticket.id, { content: message });
+      await addTicketMessageAdmin(ticket.id, { 
+        content: message,
+        is_internal_note: isInternalNote 
+      });
       setMessage("");
+      setIsInternalNote(false);
       router.refresh();
     } catch (err: any) {
       setError(err.message || "Failed to add message");
@@ -51,11 +64,25 @@ export function TicketDetail({ ticket: initialTicket }: { ticket: TicketWithDeta
     setError(null);
 
     try {
-      await updateTicket(ticket.id, { status: newStatus as any });
+      await updateTicketAdmin(ticket.id, { status: newStatus as any });
       setTicket({ ...ticket, status: newStatus as any });
       router.refresh();
     } catch (err: any) {
       setError(err.message || "Failed to update status");
+      setLoading(false);
+    }
+  };
+
+  const handlePriorityChange = async (newPriority: string) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      await updateTicketAdmin(ticket.id, { priority: newPriority as any });
+      setTicket({ ...ticket, priority: newPriority as any });
+      router.refresh();
+    } catch (err: any) {
+      setError(err.message || "Failed to update priority");
       setLoading(false);
     }
   };
@@ -70,10 +97,8 @@ export function TicketDetail({ ticket: initialTicket }: { ticket: TicketWithDeta
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const attachment = await uploadTicketFile(ticket.id, formData);
-      // Refresh to get updated ticket with new attachment
+      await uploadTicketFileAdmin(ticket.id, formData);
       router.refresh();
-      // Reset file input
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
@@ -92,34 +117,105 @@ export function TicketDetail({ ticket: initialTicket }: { ticket: TicketWithDeta
     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + " " + sizes[i];
   };
 
+  const getStatusBadgeVariant = (status: string) => {
+    switch (status) {
+      case "open":
+        return "default";
+      case "in_progress":
+        return "secondary";
+      case "waiting":
+        return "outline";
+      case "closed":
+        return "secondary";
+      default:
+        return "outline";
+    }
+  };
+
+  const getPriorityBadgeVariant = (priority: string) => {
+    switch (priority) {
+      case "urgent":
+        return "destructive";
+      case "high":
+        return "default";
+      case "medium":
+        return "secondary";
+      case "low":
+        return "outline";
+      default:
+        return "outline";
+    }
+  };
+
   return (
     <div className="space-y-6">
+      {/* Ticket Header */}
+      <Card className="border border-border/30 bg-card shadow-depth-md">
+        <CardHeader>
+          <div className="flex items-start justify-between flex-wrap gap-4">
+            <div className="flex-1">
+              <CardTitle className="text-2xl mb-2">{ticket.title}</CardTitle>
+              <div className="flex items-center gap-2 flex-wrap">
+                <Badge variant={getStatusBadgeVariant(ticket.status)}>
+                  {ticket.status.replace("_", " ")}
+                </Badge>
+                <Badge variant={getPriorityBadgeVariant(ticket.priority)}>
+                  {ticket.priority}
+                </Badge>
+                <Badge variant="outline">{tenantName}</Badge>
+                {ticket.author && (
+                  <span className="text-sm text-muted-foreground">
+                    Created by: {ticket.author.email}
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="flex gap-2 flex-wrap">
+              <Select
+                value={ticket.status}
+                onValueChange={handleStatusChange}
+                disabled={loading}
+              >
+                <SelectTrigger className="w-40">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="open">Open</SelectItem>
+                  <SelectItem value="in_progress">In Progress</SelectItem>
+                  <SelectItem value="waiting">Waiting</SelectItem>
+                  <SelectItem value="closed">Closed</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select
+                value={ticket.priority}
+                onValueChange={handlePriorityChange}
+                disabled={loading}
+              >
+                <SelectTrigger className="w-40">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                  <SelectItem value="urgent">Urgent</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardHeader>
+      </Card>
+
       {error && (
         <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
           {error}
         </div>
       )}
 
-      <Card>
+      {/* Messages */}
+      <Card className="border border-border/30 bg-card shadow-depth-md">
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Messages</CardTitle>
-            <Select
-              value={ticket.status}
-              onValueChange={handleStatusChange}
-              disabled={loading}
-            >
-              <SelectTrigger className="w-40">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="open">Open</SelectItem>
-                <SelectItem value="in_progress">In Progress</SelectItem>
-                <SelectItem value="waiting">Waiting</SelectItem>
-                <SelectItem value="closed">Closed</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <CardTitle>Messages</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {ticket.messages.length === 0 ? (
@@ -134,7 +230,7 @@ export function TicketDetail({ ticket: initialTicket }: { ticket: TicketWithDeta
               >
                 <div className="mb-2 flex items-center justify-between">
                   <div className="text-sm text-muted-foreground">
-                    {formatDateTime(msg.created_at)}
+                    {new Date(msg.created_at).toLocaleString()}
                     {msg.is_internal_note && (
                       <Badge variant="secondary" className="ml-2">
                         Internal Note
@@ -147,7 +243,19 @@ export function TicketDetail({ ticket: initialTicket }: { ticket: TicketWithDeta
             ))
           )}
 
-          <form onSubmit={handleAddMessage} className="space-y-2">
+          <form onSubmit={handleAddMessage} className="space-y-2 pt-4 border-t">
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="internal-note"
+                checked={isInternalNote}
+                onChange={(e) => setIsInternalNote(e.target.checked)}
+                className="rounded"
+              />
+              <Label htmlFor="internal-note" className="text-sm cursor-pointer">
+                Internal note (not visible to tenant)
+              </Label>
+            </div>
             <Textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
@@ -163,7 +271,7 @@ export function TicketDetail({ ticket: initialTicket }: { ticket: TicketWithDeta
         </CardContent>
       </Card>
 
-      {/* Attachments Section */}
+      {/* Attachments */}
       <Card className="border border-border/30 bg-card shadow-depth-md">
         <CardHeader>
           <CardTitle className="text-xl">Attachments</CardTitle>
@@ -227,4 +335,3 @@ export function TicketDetail({ ticket: initialTicket }: { ticket: TicketWithDeta
     </div>
   );
 }
-

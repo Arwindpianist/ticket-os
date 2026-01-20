@@ -23,6 +23,7 @@ export interface CreateContractInput {
 }
 
 export interface UpdateContractInput {
+  tenant_id?: string;
   title?: string;
   summary?: Json;
   pdf_url?: string | null;

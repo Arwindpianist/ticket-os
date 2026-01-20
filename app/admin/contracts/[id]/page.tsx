@@ -8,6 +8,7 @@ import Link from "next/link";
 import { ContractDisplay } from "@/components/contract-display";
 import { AnimatedPage } from "@/components/animated-page";
 import { getAllTenants } from "@/modules/tenants/queries";
+import { formatDate } from "@/lib/utils";
 
 export default async function AdminContractDetailPage({
   params,
@@ -52,11 +53,18 @@ export default async function AdminContractDetailPage({
             </div>
             <p className="text-muted-foreground text-lg">Tenant: {tenantName}</p>
           </div>
-          <Link href="/admin/contracts">
-            <Button variant="outline" className="transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
-              Back to Contracts
-            </Button>
-          </Link>
+          <div className="flex gap-2">
+            <Link href={`/admin/contracts/${params.id}/edit`}>
+              <Button className="transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
+                Edit Contract
+              </Button>
+            </Link>
+            <Link href="/admin/contracts">
+              <Button variant="outline" className="transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
+                Back to Contracts
+              </Button>
+            </Link>
+          </div>
         </div>
 
         <div className="grid gap-6">
@@ -73,7 +81,7 @@ export default async function AdminContractDetailPage({
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Period</p>
                 <p className="text-lg">
-                  {startDate.toLocaleDateString()} - {endDate.toLocaleDateString()}
+                  {formatDate(startDate)} - {formatDate(endDate)}
                 </p>
               </div>
               <div>

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { AnimatedPage } from "@/components/animated-page";
 import { AnimatedCard, AnimatedCardHeader } from "@/components/animated-card";
+import { formatDate } from "@/lib/utils";
 
 export default async function ContractsPage() {
   const authContext = await getAuthContext();
@@ -94,7 +95,7 @@ export default async function ContractsPage() {
                           {today < startDate && <Badge variant="outline">Upcoming</Badge>}
                         </div>
                         <p className="text-sm text-muted-foreground">
-                          {startDate.toLocaleDateString()} - {endDate.toLocaleDateString()}
+                          {formatDate(startDate)} - {formatDate(endDate)}
                         </p>
                       </div>
                     </div>

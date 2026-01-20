@@ -23,6 +23,8 @@ export interface Database {
           tenant_id: string | null;
           created_at: string;
           updated_at: string;
+          must_change_password: boolean;
+          password_changed_at: string | null;
         };
         Insert: {
           id: string;
@@ -31,6 +33,8 @@ export interface Database {
           tenant_id?: string | null;
           created_at?: string;
           updated_at?: string;
+          must_change_password?: boolean;
+          password_changed_at?: string | null;
         };
         Update: {
           id?: string;
@@ -39,6 +43,8 @@ export interface Database {
           tenant_id?: string | null;
           created_at?: string;
           updated_at?: string;
+          must_change_password?: boolean;
+          password_changed_at?: string | null;
         };
       };
       tenants: {
@@ -150,6 +156,8 @@ export interface Database {
           priority: TicketPriority;
           created_at: string;
           updated_at: string;
+          resolved_at: string | null;
+          contract_item_id: string | null;
         };
         Insert: {
           id?: string;
@@ -160,6 +168,8 @@ export interface Database {
           priority?: TicketPriority;
           created_at?: string;
           updated_at?: string;
+          resolved_at?: string | null;
+          contract_item_id?: string | null;
         };
         Update: {
           id?: string;
@@ -170,6 +180,8 @@ export interface Database {
           priority?: TicketPriority;
           created_at?: string;
           updated_at?: string;
+          resolved_at?: string | null;
+          contract_item_id?: string | null;
         };
       };
       ticket_messages: {

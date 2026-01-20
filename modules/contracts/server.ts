@@ -107,6 +107,7 @@ export async function updateContract(
   }
 
   const updateData: any = {};
+  if (input.tenant_id) updateData.tenant_id = input.tenant_id;
   if (input.title) updateData.title = input.title;
   if (input.summary) updateData.summary = input.summary;
   if (input.pdf_url !== undefined) updateData.pdf_url = input.pdf_url;
@@ -124,9 +125,10 @@ export async function updateContract(
     throw new Error(`Failed to update contract: ${error.message}`);
   }
 
-  // Log activity
+  // Log activity (use new tenant_id if updated, otherwise use existing)
+  const activityTenantId = input.tenant_id || existing.tenant_id;
   await logActivity({
-    tenantId: existing.tenant_id,
+    tenantId: activityTenantId,
     userId: session.user.id,
     actionType: "contract_updated",
     entityType: "contract",

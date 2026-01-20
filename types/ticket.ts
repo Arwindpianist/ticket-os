@@ -9,6 +9,8 @@ export interface Ticket {
   priority: TicketPriority;
   created_at: string;
   updated_at: string;
+  resolved_at: string | null;
+  contract_item_id: string | null;
 }
 
 export interface TicketMessage {

@@ -4,6 +4,7 @@ import { NotFoundError } from "@/lib/errors";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ContractDisplay } from "@/components/contract-display";
+import { formatDate } from "@/lib/utils";
 
 export default async function ContractDetailPage({
   params,
@@ -44,7 +45,7 @@ export default async function ContractDetailPage({
             <div>
               <p className="text-sm font-medium text-muted-foreground">Period</p>
               <p className="text-lg">
-                {startDate.toLocaleDateString()} - {endDate.toLocaleDateString()}
+                {formatDate(startDate)} - {formatDate(endDate)}
               </p>
             </div>
             <div>

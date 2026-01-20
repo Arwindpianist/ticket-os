@@ -7,6 +7,7 @@ import {
   getTicketCreatedTemplate,
   getTicketUpdatedTemplate,
   getMessageAddedTemplate,
+  getAdminTicketCreatedTemplate,
 } from "./templates";
 
 // Get the portal URL from environment or use default
@@ -120,6 +121,37 @@ export async function sendCommentNotification(
 
   await sendEmail({
     to: recipientEmail,
+    subject: template.subject,
+    body: template.body,
+    tenantId,
+  });
+}
+
+export async function sendAdminTicketNotification(
+  tenantId: string,
+  tenantName: string,
+  ticketId: string,
+  ticketTitle: string,
+  priority: string,
+  status: string,
+  creatorEmail: string,
+  initialMessage?: string
+): Promise<void> {
+  const adminEmail = "hello@arwindpianist.com";
+  
+  const template = await getAdminTicketCreatedTemplate(
+    tenantId,
+    tenantName,
+    ticketTitle,
+    ticketId,
+    priority,
+    status,
+    creatorEmail,
+    initialMessage
+  );
+
+  await sendEmail({
+    to: adminEmail,
     subject: template.subject,
     body: template.body,
     tenantId,
