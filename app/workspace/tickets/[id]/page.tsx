@@ -42,7 +42,7 @@ export default async function TicketDetailPage({
 
   // Fetch activity logs for this ticket if enabled
   const activities = activityFeedEnabled 
-    ? await getEntityActivityLogs("ticket", params.id)
+    ? await getEntityActivityLogs("ticket", id)
     : [];
 
   return (
