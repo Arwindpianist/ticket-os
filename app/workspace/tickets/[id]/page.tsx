@@ -8,6 +8,23 @@ import { getEntityActivityLogs } from "@/modules/activity/server";
 import { ActivityFeed } from "@/components/activity/activity-feed";
 import { isFeatureEnabled } from "@/modules/features/server";
 import { AnimatedCard, AnimatedCardHeader, CardContent, CardDescription, CardTitle } from "@/components/animated-card";
+import { generateMetadataForTicket } from "@/lib/metadata";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<import("next").Metadata> {
+  const { id } = await params;
+  const ticket = await getTicket(id);
+  if (!ticket) {
+    return {
+      title: "Ticket Not Found - Ticket OS",
+    };
+  }
+  
+  return generateMetadataForTicket(id, ticket.title);
+}
 
 export default async function TicketDetailPage({
   params,

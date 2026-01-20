@@ -24,7 +24,7 @@ export default async function UsersPage() {
     );
   }
 
-  const supabase = createClient();
+  const supabase = await createClient();
   
   // Get all users in the tenant
   const { data: users, error } = await supabase

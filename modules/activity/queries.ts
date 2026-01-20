@@ -18,7 +18,7 @@ export async function getTenantActivityLogs(
   tenantId: string,
   limit: number = 50
 ): Promise<ActivityLog[]> {
-  const supabase = createClient();
+  const supabase = await createClient();
   
   // First get activity logs
   const { data: logs, error: logsError } = await supabase
@@ -67,7 +67,7 @@ export async function getEntityActivityLogs(
   entityType: string,
   entityId: string
 ): Promise<ActivityLog[]> {
-  const supabase = createClient();
+  const supabase = await createClient();
   
   // First get activity logs
   const { data: logs, error: logsError } = await supabase

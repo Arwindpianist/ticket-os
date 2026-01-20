@@ -2,7 +2,7 @@ import { createClient, createServiceRoleClient } from "@/lib/supabase/server";
 import { Contract } from "./types";
 
 export async function getTenantContracts(tenantId: string): Promise<Contract[]> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from("contracts")
     .select("*")
@@ -34,7 +34,7 @@ export async function getContractById(
   contractId: string,
   tenantId: string
 ): Promise<Contract | null> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from("contracts")
     .select("*")

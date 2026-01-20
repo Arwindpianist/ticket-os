@@ -5,7 +5,7 @@ import { AuthContext, Session } from "./types";
 import { getImpersonationContext } from "./impersonation";
 
 export async function getServerSession(): Promise<Session | null> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const {
     data: { user },
     error,

@@ -27,7 +27,7 @@ export async function uploadTicketFile(
   }
 
   // Verify ticket exists and belongs to tenant
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: ticket, error: ticketError } = await supabase
     .from("tickets")
     .select("id, title")
@@ -84,7 +84,7 @@ export async function deleteTicketAttachment(attachmentId: string): Promise<void
   const tenantId = await requireTenantContext();
 
   // Verify attachment exists and belongs to tenant
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: attachment, error: fetchError } = await supabase
     .from("ticket_attachments")
     .select("ticket_id, tickets!inner(tenant_id)")

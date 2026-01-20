@@ -10,7 +10,7 @@ export async function getTickets(
     created_by?: string;
   }
 ): Promise<Ticket[]> {
-  const supabase = createClient();
+  const supabase = await createClient();
   let query = supabase
     .from("tickets")
     .select("*")
@@ -40,7 +40,7 @@ export async function getTicketById(
   ticketId: string,
   tenantId: string
 ): Promise<TicketWithDetails | null> {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: ticket, error: ticketError } = await supabase
     .from("tickets")
     .select("*")
@@ -78,7 +78,8 @@ export async function getTicketById(
   }
 
   // Fetch author info
-  const { data: author } = await supabase
+  const supabaseForAuthor = await createClient();
+  const { data: author } = await supabaseForAuthor
     .from("profiles")
     .select("id, email")
     .eq("id", ticket.created_by)

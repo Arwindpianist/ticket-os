@@ -5,6 +5,28 @@ import { AdminTicketDetail } from "./admin-ticket-detail";
 import { AnimatedPage } from "@/components/animated-page";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { generateMetadataForTicket } from "@/lib/metadata";
+import { getAllTenants } from "@/modules/tenants/queries";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<import("next").Metadata> {
+  const { id } = await params;
+  const ticket = await getTicketByIdAdmin(id);
+  if (!ticket) {
+    return {
+      title: "Ticket Not Found - Ticket OS",
+    };
+  }
+  
+  const tenants = await getAllTenants();
+  const tenant = tenants.find(t => t.id === ticket.tenant_id);
+  const tenantName = tenant?.name;
+  
+  return generateMetadataForTicket(id, ticket.title, tenantName);
+}
 
 export default async function AdminTicketDetailPage({
   params,

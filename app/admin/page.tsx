@@ -7,6 +7,11 @@ import { Button } from "@/components/ui/button";
 import { AnimatedPage } from "@/components/animated-page";
 import { TicketStatusChart, TicketTrendsChart } from "@/components/admin/dashboard-charts";
 import { SLACard } from "@/components/admin/sla-card";
+import { generateMetadataForPath } from "@/lib/metadata";
+
+export function generateMetadata() {
+  return generateMetadataForPath("/admin", "Admin Dashboard - Ticket OS", "Manage tenants, users, tickets, and system analytics");
+}
 
 export default async function AdminDashboard() {
   await requireSuperAdmin();

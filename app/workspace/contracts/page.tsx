@@ -8,6 +8,11 @@ import Link from "next/link";
 import { AnimatedPage } from "@/components/animated-page";
 import { AnimatedCard, AnimatedCardHeader } from "@/components/animated-card";
 import { formatDate } from "@/lib/utils";
+import { generateMetadataForPath } from "@/lib/metadata";
+
+export function generateMetadata() {
+  return generateMetadataForPath("/workspace/contracts");
+}
 
 export default async function ContractsPage() {
   const authContext = await getAuthContext();

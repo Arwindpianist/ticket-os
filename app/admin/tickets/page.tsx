@@ -1,6 +1,11 @@
 import { requireSuperAdmin } from "@/modules/auth/server";
 import { Suspense } from "react";
 import { TicketsContent } from "./tickets-content";
+import { generateMetadataForPath } from "@/lib/metadata";
+
+export function generateMetadata() {
+  return generateMetadataForPath("/admin/tickets");
+}
 
 export default async function AdminTicketsPage() {
   await requireSuperAdmin();

@@ -15,6 +15,11 @@ import { ContractItemUsageSummary } from "@/components/contracts/contract-item-u
 import { AlertTriangle, TrendingUp, FileText, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TenantLogo } from "@/components/branding/tenant-logo";
+import { generateMetadataForPath } from "@/lib/metadata";
+
+export function generateMetadata() {
+  return generateMetadataForPath("/workspace");
+}
 
 export default async function WorkspacePage() {
   const authContext = await getAuthContext();

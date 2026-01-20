@@ -33,7 +33,7 @@ export interface ContractItemUsageStats {
  */
 export async function getContractItemUsageStats(): Promise<ContractItemUsageStats> {
   await requireTenantContext();
-  const supabase = createClient();
+  const supabase = await createClient();
   const contracts = await getContracts();
   const today = new Date();
 
@@ -157,7 +157,7 @@ export async function getContractItemUsageTrend(
   days: number = 30
 ): Promise<Array<{ date: string; count: number }>> {
   await requireTenantContext();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - days);

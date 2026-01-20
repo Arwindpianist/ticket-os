@@ -9,6 +9,33 @@ import { ContractDisplay } from "@/components/contract-display";
 import { AnimatedPage } from "@/components/animated-page";
 import { getAllTenants } from "@/modules/tenants/queries";
 import { formatDate } from "@/lib/utils";
+import { generateMetadataForContract } from "@/lib/metadata";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<import("next").Metadata> {
+  const { id } = await params;
+  const supabase = createServiceRoleClient();
+  const { data: contract } = await supabase
+    .from("contracts")
+    .select("*")
+    .eq("id", id)
+    .single();
+  
+  if (!contract) {
+    return {
+      title: "Contract Not Found - Ticket OS",
+    };
+  }
+  
+  const tenants = await getAllTenants();
+  const tenant = tenants.find(t => t.id === contract.tenant_id);
+  const tenantName = tenant?.name;
+  
+  return generateMetadataForContract(id, contract.title, tenantName);
+}
 
 export default async function AdminContractDetailPage({
   params,

@@ -20,7 +20,7 @@ export async function checkContractItemLimit(
   contractItemId: string
 ): Promise<LimitCheckResult> {
   const tenantId = await requireTenantContext();
-  const supabase = createClient();
+  const supabase = await createClient();
 
   // Parse contract item ID (format: contractId-itemId)
   const [contractId, itemId] = contractItemId.split("-");

@@ -6,6 +6,11 @@ import Link from "next/link";
 import { AnimatedPage } from "@/components/animated-page";
 import { AnimatedCard, AnimatedCardHeader, CardContent, CardDescription, CardTitle } from "@/components/animated-card";
 import { ContractListItem } from "./contract-list-item";
+import { generateMetadataForPath } from "@/lib/metadata";
+
+export function generateMetadata() {
+  return generateMetadataForPath("/admin/contracts");
+}
 
 export default async function AdminContractsPage() {
   await requireSuperAdmin();

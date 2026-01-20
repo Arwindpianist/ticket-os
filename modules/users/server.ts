@@ -182,7 +182,7 @@ export async function updateUserTenant(userId: string, tenantId: string | null):
 
 export async function clearPasswordChangeFlag(userId: string): Promise<void> {
   // Allow any authenticated user to clear their own password change flag
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user || user.id !== userId) {

@@ -36,7 +36,7 @@ export async function createTicket(
 
   validateTicketTitle(input.title);
 
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: ticket, error: ticketError } = await supabase
     .from("tickets")
     .insert({
@@ -237,7 +237,7 @@ export async function addTicketMessage(
     throw new Error("Only admins can create internal notes");
   }
 
-  const supabase = createClient();
+  const supabase = await createClient();
   const { error } = await supabase.from("ticket_messages").insert({
     ticket_id: ticketId,
     author_id: session.user.id,

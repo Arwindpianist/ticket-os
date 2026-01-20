@@ -5,6 +5,23 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { ContractDisplay } from "@/components/contract-display";
 import { formatDate } from "@/lib/utils";
+import { generateMetadataForContract } from "@/lib/metadata";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<import("next").Metadata> {
+  const { id } = await params;
+  const contract = await getContract(id);
+  if (!contract) {
+    return {
+      title: "Contract Not Found - Ticket OS",
+    };
+  }
+  
+  return generateMetadataForContract(id, contract.title);
+}
 
 export default async function ContractDetailPage({
   params,

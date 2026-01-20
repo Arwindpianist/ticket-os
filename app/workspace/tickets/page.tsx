@@ -7,6 +7,11 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { AnimatedPage } from "@/components/animated-page";
 import { TicketItem } from "./ticket-item";
+import { generateMetadataForPath } from "@/lib/metadata";
+
+export function generateMetadata() {
+  return generateMetadataForPath("/workspace/tickets");
+}
 
 export default async function TicketsPage() {
   await requireAuth();

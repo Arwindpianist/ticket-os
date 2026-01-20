@@ -6,6 +6,7 @@ import { Navigation } from "@/components/navigation";
 import { ImpersonationBanner } from "@/components/impersonation-banner";
 import { getAuthContext } from "@/modules/auth/server";
 import { getTenantBranding } from "@/modules/branding/queries";
+import { generateMetadataForPath } from "@/lib/metadata";
 
 const playfair = Playfair_Display({ 
   subsets: ["latin"],
@@ -19,14 +20,9 @@ const inter = Inter({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Ticket OS",
-  description: "Multi-tenant ticket management platform",
-  icons: {
-    icon: "/portal.svg",
-    apple: "/portal.svg",
-  },
-};
+export function generateMetadata(): Metadata {
+  return generateMetadataForPath("/");
+}
 
 export default async function RootLayout({
   children,

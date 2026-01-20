@@ -6,6 +6,11 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { AnimatedPage } from "@/components/animated-page";
 import { TenantListItem } from "@/components/admin/tenant-list-item";
+import { generateMetadataForPath } from "@/lib/metadata";
+
+export function generateMetadata() {
+  return generateMetadataForPath("/admin/tenants");
+}
 
 export default async function TenantsPage() {
   await requireSuperAdmin();

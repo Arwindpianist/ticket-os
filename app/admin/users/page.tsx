@@ -7,6 +7,11 @@ import Link from "next/link";
 import { AnimatedPage } from "@/components/animated-page";
 import { AnimatedCard, AnimatedCardHeader, CardContent, CardDescription, CardTitle } from "@/components/animated-card";
 import { UserList } from "@/components/admin/user-list";
+import { generateMetadataForPath } from "@/lib/metadata";
+
+export function generateMetadata() {
+  return generateMetadataForPath("/admin/users");
+}
 
 export default async function AdminUsersPage() {
   const session = await requireSuperAdmin();
